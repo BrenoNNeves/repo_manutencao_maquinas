@@ -12,6 +12,7 @@ import com.utfpr.manutencaodesktop.mantainer.MantainerDAO;
 import java.sql.Date;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import javax.swing.JOptionPane;
 
 /**
@@ -40,8 +41,18 @@ public class OrderForm extends javax.swing.JFrame {
         initComponents();
         orderDAO = new OrderDAO();
         createLists();
-        Machine selectedMachine = this.machines.stream().filter(m -> m.getIdMachine() == editOrder.getMachineId()).findFirst().get();
-        Mantainer selectedMantainer = this.mantainers.stream().filter(m -> m.getIdMantainer() == editOrder.getMantainerId()).findFirst().get();
+        Machine selectedMachine = null;
+        Mantainer selectedMantainer = null;
+        try {
+            selectedMachine = this.machines.stream().filter(m -> m.getIdMachine() == editOrder.getMachineId()).findFirst().get();
+        } catch (NoSuchElementException erro) {
+            JOptionPane.showMessageDialog(null, "A máquina para essa ordem não existe!");
+        }
+        try {
+            selectedMantainer = this.mantainers.stream().filter(m -> m.getIdMantainer() == editOrder.getMantainerId()).findFirst().get();
+        } catch (NoSuchElementException erro) {
+            JOptionPane.showMessageDialog(null, "O manutentor para essa ordem não existe!");
+        }
         this.machineSelect.setSelectedItem(selectedMachine);
         this.mantainerSelect.setSelectedItem(selectedMantainer);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -187,17 +198,31 @@ public class OrderForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         Machine machine = (Machine) this.machineSelect.getSelectedItem();
         Mantainer mantainer = (Mantainer) this.mantainerSelect.getSelectedItem();
-        Date beginDate = new Date(Date.parse(this.dateField.getText()));
-        if (this.order.getIdOrder() == 0) {
-            Order newOrder = new Order(0, this.descField.getText(), beginDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
-            orderDAO.order = newOrder;
-            JOptionPane.showMessageDialog(null, orderDAO.atualizar(orderDAO.INCLUSAO));
-        } else {
-            Order newOrder = new Order(order.getIdOrder(), this.descField.getText(), beginDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
-            orderDAO.order = newOrder;
-            JOptionPane.showMessageDialog(null, orderDAO.atualizar(orderDAO.ALTERACAO));
+        Date beginDate = null;
+        try {
+            beginDate = new Date(Date.parse(this.dateField.getText()));
+        } catch (IllegalArgumentException erro) {
+            JOptionPane.showMessageDialog(null, "Preencha a data e tente novamente!");
         }
-        this.dispose();
+        
+        if (machine != null 
+                && mantainer != null 
+                && !"".equals(dateField.getText())
+                && beginDate != null){
+            if (this.order.getIdOrder() == 0) {
+                Order newOrder = new Order(0, this.descField.getText(), beginDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
+                orderDAO.order = newOrder;
+                JOptionPane.showMessageDialog(null, orderDAO.atualizar(orderDAO.INCLUSAO));
+                this.dispose();
+            } else {
+                Order newOrder = new Order(order.getIdOrder(), this.descField.getText(), beginDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
+                orderDAO.order = newOrder;
+                JOptionPane.showMessageDialog(null, orderDAO.atualizar(orderDAO.ALTERACAO));
+                this.dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos e tente novamente!");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

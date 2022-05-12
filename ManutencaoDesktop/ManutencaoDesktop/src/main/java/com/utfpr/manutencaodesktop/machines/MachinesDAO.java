@@ -7,6 +7,7 @@ package com.utfpr.manutencaodesktop.machines;
 
 import com.utfpr.manutencaodesktop.Connect;
 import com.utfpr.manutencaodesktop.utils.ManutencaoDAO;
+import static java.lang.System.console;
 import java.sql.SQLException;
 import java.util.ArrayList;
 

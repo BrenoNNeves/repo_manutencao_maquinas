@@ -21,7 +21,7 @@ public class Connect {
     public boolean Connect() {
         try {
             Class.forName(DRIVER);
-            this.connection = DriverManager.getConnection(URL, "root", "2536");
+            this.connection = DriverManager.getConnection(URL, "root", "45754097");
             System.out.println("Conexao Realizada com sucesso!");
             return true;
         } catch (ClassNotFoundException erro) {
