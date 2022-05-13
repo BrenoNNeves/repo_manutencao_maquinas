@@ -10,6 +10,7 @@ import com.utfpr.manutencaodesktop.utils.ManutencaoDAO;
 import static java.lang.System.console;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -59,14 +60,18 @@ public class MachinesDAO extends ManutencaoDAO {
         men = "Operacao realizada com sucesso!";
         try {
             if (operacao == INCLUSAO) {
-                sql = "insert into machine (nameMachine) values (?)";
-                statement = connect.connection.prepareStatement(sql);
-                statement.setString(1, machine.getNameMachine());
+                if(localizarPorNome()){
+                    sql = "insert into machine (nameMachine) values (?)";
+                    statement = connect.connection.prepareStatement(sql);
+                    statement.setString(1, machine.getNameMachine());
+                }
             } else if (operacao == ALTERACAO) {
-                sql = "update machine set nameMachine = ? where idMachine = ?";
-                statement = connect.connection.prepareStatement(sql);
-                statement.setString(1, machine.getNameMachine());
-                statement.setInt(2, machine.getIdMachine());
+                if(localizarPorNome()){
+                    sql = "update machine set nameMachine = ? where idMachine = ?";
+                    statement = connect.connection.prepareStatement(sql);
+                    statement.setString(1, machine.getNameMachine());
+                    statement.setInt(2, machine.getIdMachine());
+                }
             } else if (operacao == EXCLUSAO) {
                 sql = "delete from machine where idMachine = ?";
                 statement = connect.connection.prepareStatement(sql);
@@ -79,5 +84,22 @@ public class MachinesDAO extends ManutencaoDAO {
             men = "Falha na operacao!";
         }
         return men;
+    }
+    
+        public boolean localizarPorNome() {
+        sql = "select * from machine where nameMachine = ?";
+        try {
+            statement = connect.connection.prepareStatement(sql);
+            statement.setString(1, machine.getNameMachine());
+            resultSet = statement.executeQuery();
+            if (!resultSet.next()){
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Máquina já existente!");
+                return false;
+            }
+        } catch (SQLException erro) {
+            return true;
+        }
     }
 }

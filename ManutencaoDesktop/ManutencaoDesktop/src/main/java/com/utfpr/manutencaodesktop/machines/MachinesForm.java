@@ -122,13 +122,25 @@ public class MachinesForm extends javax.swing.JFrame {
         }
         machinesDAO.machine.setNameMachine(tfNome.getText());
         machinesDAO.machine.setIdMachine(this.machine.getIdMachine());
+        
+        String mensagem = "";
         if (this.machine.getIdMachine() == 0) {
-            JOptionPane.showMessageDialog(null, machinesDAO.atualizar(MachinesDAO.INCLUSAO));
+            mensagem = machinesDAO.atualizar(MachinesDAO.INCLUSAO);
+            if ("Operacao realizada com sucesso!".equals(mensagem)){
+                JOptionPane.showMessageDialog(null, mensagem);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, mensagem);
+            }  
         } else {
-            JOptionPane.showMessageDialog(null, machinesDAO.atualizar(MachinesDAO.ALTERACAO));
-            this.dispose();
+            mensagem = machinesDAO.atualizar(MachinesDAO.ALTERACAO);
+            if ("Operacao realizada com sucesso!".equals(mensagem)){
+                JOptionPane.showMessageDialog(null, mensagem);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, mensagem);
+            }  
         }
-        tfNome.setText("");
     }//GEN-LAST:event_buttonSalvarActionPerformed
 
     /**
