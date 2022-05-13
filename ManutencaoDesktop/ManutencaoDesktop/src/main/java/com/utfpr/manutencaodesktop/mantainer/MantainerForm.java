@@ -5,6 +5,7 @@
  */
 package com.utfpr.manutencaodesktop.mantainer;
 
+import com.utfpr.manutencaodesktop.machines.MachinesDAO;
 import javax.swing.JOptionPane;
 
 /**
@@ -117,13 +118,25 @@ public class MantainerForm extends javax.swing.JFrame {
         }
         mantainersDAO.mantainer.setNomeMantainer(jTextField1.getText());
         mantainersDAO.mantainer.setIdMantainer(this.mantainer.getIdMantainer());
+        
+        String mensagem = "";
         if (this.mantainer.getIdMantainer() == 0) {
-            JOptionPane.showMessageDialog(null, mantainersDAO.atualizar(MantainerDAO.INCLUSAO));
+            mensagem = mantainersDAO.atualizar(MantainerDAO.INCLUSAO);
+            if ("Operacao realizada com sucesso!".equals(mensagem)){
+                JOptionPane.showMessageDialog(null, mensagem);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, mensagem);
+            }
         } else {
-            JOptionPane.showMessageDialog(null, mantainersDAO.atualizar(MantainerDAO.ALTERACAO));
-            this.dispose();
+            mensagem = mantainersDAO.atualizar(MantainerDAO.ALTERACAO);
+            if ("Operacao realizada com sucesso!".equals(mensagem)){
+                JOptionPane.showMessageDialog(null, mensagem);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, mensagem);
+            } 
         }
-        jTextField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

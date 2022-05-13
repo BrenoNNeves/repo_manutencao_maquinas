@@ -11,6 +11,7 @@ import static com.utfpr.manutencaodesktop.utils.ManutencaoDAO.EXCLUSAO;
 import static com.utfpr.manutencaodesktop.utils.ManutencaoDAO.INCLUSAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -60,14 +61,18 @@ public class MantainerDAO extends ManutencaoDAO {
         men = "Operacao realizada com sucesso!";
         try {
             if (operacao == INCLUSAO) {
-                sql = "insert into mantainer (nameMantainer) values (?)";
-                statement = connect.connection.prepareStatement(sql);
-                statement.setString(1, mantainer.getNomeMantainer());
+                if(localizarPorNome()){
+                    sql = "insert into mantainer (nameMantainer) values (?)";
+                    statement = connect.connection.prepareStatement(sql);
+                    statement.setString(1, mantainer.getNomeMantainer());
+                }
             } else if (operacao == ALTERACAO) {
-                sql = "update mantainer set nameMantainer = ? where idMantainer = ?";
-                statement = connect.connection.prepareStatement(sql);
-                statement.setString(1, mantainer.getNomeMantainer());
-                statement.setInt(2, mantainer.getIdMantainer());
+                if(localizarPorNome()){
+                    sql = "update mantainer set nameMantainer = ? where idMantainer = ?";
+                    statement = connect.connection.prepareStatement(sql);
+                    statement.setString(1, mantainer.getNomeMantainer());
+                    statement.setInt(2, mantainer.getIdMantainer());
+                }
             } else if (operacao == EXCLUSAO) {
                 sql = "delete from mantainer where idMantainer = ?";
                 statement = connect.connection.prepareStatement(sql);
@@ -80,5 +85,22 @@ public class MantainerDAO extends ManutencaoDAO {
             men = "Falha na operacao!";
         }
         return men;
+    }
+    
+    public boolean localizarPorNome() {
+        sql = "select * from mantainer where nameMantainer = ?";
+        try {
+            statement = connect.connection.prepareStatement(sql);
+            statement.setString(1, mantainer.getNomeMantainer());
+            resultSet = statement.executeQuery();
+            if (!resultSet.next()){
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Manutentor já existente!");
+                return false;
+            }
+        } catch (SQLException erro) {
+            return true;
+        }
     }
 }

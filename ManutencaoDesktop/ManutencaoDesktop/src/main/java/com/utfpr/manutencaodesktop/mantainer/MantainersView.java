@@ -127,7 +127,6 @@ public class MantainersView extends javax.swing.JFrame {
         Mantainer selectedMantainer = this.jList1.getSelectedValue();
         MantainerForm mantainerForm = new MantainerForm(selectedMantainer);
         mantainerForm.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
