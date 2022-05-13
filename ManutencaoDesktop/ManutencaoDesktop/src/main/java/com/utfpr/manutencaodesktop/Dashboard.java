@@ -63,7 +63,6 @@ public class Dashboard extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dashboard de manutenção");
 
-        newOrderQuickButton.setIcon(new javax.swing.ImageIcon("C:\\Users\\leona\\OneDrive\\Documentos\\Programação Desktop\\ManutencaoDesktop\\src\\main\\java\\com\\utfpr\\manutencaodesktop\\assets\\Finance-Purchase-Order-icon.png")); // NOI18N
         newOrderQuickButton.setText("Nova Ordem");
         newOrderQuickButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -89,7 +88,6 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\leona\\OneDrive\\Documentos\\Programação Desktop\\ManutencaoDesktop\\src\\main\\java\\com\\utfpr\\manutencaodesktop\\assets\\Reload-2-2-icon.png")); // NOI18N
         jButton1.setText("Atualizar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,8 +95,9 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\leona\\OneDrive\\Documentos\\Programação Desktop\\ManutencaoDesktop\\src\\main\\java\\com\\utfpr\\manutencaodesktop\\assets\\Pencil-icon.png")); // NOI18N
         jButton2.setText("Editar");
+        jButton2.setMaximumSize(new java.awt.Dimension(70, 25));
+        jButton2.setPreferredSize(new java.awt.Dimension(66, 25));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -109,7 +108,6 @@ public class Dashboard extends javax.swing.JFrame {
 
         mantainersButton.setText("Manutentores");
 
-        newMantainerButton.setIcon(new javax.swing.ImageIcon("C:\\Users\\leona\\OneDrive\\Documentos\\Programação Desktop\\ManutencaoDesktop\\src\\main\\java\\com\\utfpr\\manutencaodesktop\\assets\\Worker-icon.png")); // NOI18N
         newMantainerButton.setText("Novo");
         newMantainerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,7 +116,6 @@ public class Dashboard extends javax.swing.JFrame {
         });
         mantainersButton.add(newMantainerButton);
 
-        openMantainerButton.setIcon(new javax.swing.ImageIcon("C:\\Users\\leona\\OneDrive\\Documentos\\Programação Desktop\\ManutencaoDesktop\\src\\main\\java\\com\\utfpr\\manutencaodesktop\\assets\\Users-Workers-icon.png")); // NOI18N
         openMantainerButton.setText("Abrir Existente");
         openMantainerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,7 +128,6 @@ public class Dashboard extends javax.swing.JFrame {
 
         jMenu1.setText("Máquinas");
 
-        jMenuItem1.setIcon(new javax.swing.ImageIcon("C:\\Users\\leona\\OneDrive\\Documentos\\Programação Desktop\\ManutencaoDesktop\\src\\main\\java\\com\\utfpr\\manutencaodesktop\\assets\\Gear-icon.png")); // NOI18N
         jMenuItem1.setText("Adicionar");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +136,6 @@ public class Dashboard extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setIcon(new javax.swing.ImageIcon("C:\\Users\\leona\\OneDrive\\Documentos\\Programação Desktop\\ManutencaoDesktop\\src\\main\\java\\com\\utfpr\\manutencaodesktop\\assets\\Gears-icon.png")); // NOI18N
         jMenuItem2.setText("Abrir existentes");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -163,9 +158,9 @@ public class Dashboard extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(newOrderQuickButton, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(openFilterButton)
@@ -181,8 +176,8 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(newOrderQuickButton, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(orderList, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
