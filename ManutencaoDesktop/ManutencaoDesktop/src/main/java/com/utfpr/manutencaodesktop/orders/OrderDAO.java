@@ -10,7 +10,10 @@ import static com.utfpr.manutencaodesktop.utils.ManutencaoDAO.ALTERACAO;
 import static com.utfpr.manutencaodesktop.utils.ManutencaoDAO.EXCLUSAO;
 import static com.utfpr.manutencaodesktop.utils.ManutencaoDAO.INCLUSAO;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -35,16 +38,17 @@ public class OrderDAO extends ManutencaoDAO {
             order.setIdOrder(resultSet.getInt(1));
             order.setDescriptionOrder(resultSet.getString(2));
             order.setBeginDateOrder(resultSet.getDate(3));
-            order.setFinishedOrder(resultSet.getBoolean(4));
-            order.setMachineId(resultSet.getInt(5));
+            order.setFinalDateOrder(resultSet.getDate(4));
+            order.setFinishedOrder(resultSet.getBoolean(5));
             order.setMachineId(resultSet.getInt(6));
+            order.setMachineId(resultSet.getInt(7));
             return true;
         } catch (SQLException erro) {
             return false;
         }
     }
     
-    public ArrayList<Order> localizarTodos(boolean isFinished) {
+    public ArrayList<Order> localizarFiltro(boolean isFinished) {
         sql = "select * from `manutencao`.order where finishedOrder = ?";
         try {
             statement = connect.connection.prepareStatement(sql);
@@ -52,7 +56,38 @@ public class OrderDAO extends ManutencaoDAO {
             resultSet = statement.executeQuery();
             ArrayList<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
-                Order newOrder = new Order(resultSet.getInt(1), resultSet.getString(2), resultSet.getDate(3), resultSet.getBoolean(4), resultSet.getInt(5), resultSet.getInt(6));
+                Order newOrder = new Order(
+                        resultSet.getInt(1), 
+                        resultSet.getString(2), 
+                        resultSet.getDate(3), 
+                        resultSet.getDate(4), 
+                        resultSet.getBoolean(5), 
+                        resultSet.getInt(6), 
+                        resultSet.getInt(7));
+                orders.add(newOrder);
+            }
+            return orders;
+        } catch (SQLException erro) {
+            System.out.println(erro);
+            return null;
+        }
+    }
+    
+    public ArrayList<Order> localizarTodas() {
+        sql = "select * from `manutencao`.order";
+        try {
+            statement = connect.connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            ArrayList<Order> orders = new ArrayList<>();
+            while (resultSet.next()) {
+                Order newOrder = new Order(
+                        resultSet.getInt(1), 
+                        resultSet.getString(2), 
+                        resultSet.getDate(3), 
+                        resultSet.getDate(4), 
+                        resultSet.getBoolean(5), 
+                        resultSet.getInt(6), 
+                        resultSet.getInt(7));
                 orders.add(newOrder);
             }
             return orders;
@@ -66,22 +101,24 @@ public class OrderDAO extends ManutencaoDAO {
         men = "Operacao realizada com sucesso!";
         try {
             if (operacao == INCLUSAO) {
-                sql = "insert into `manutencao`.order (descriptionOrder, beginDateOrder, finishedOrder, mantainerId, machineId) values (?,?,?,?,?)";
+                sql = "insert into `manutencao`.order (descriptionOrder, beginDateOrder, finalDateOrder, finishedOrder, mantainerId, machineId) values (?,?,?,?,?,?)";
                 statement = connect.connection.prepareStatement(sql);
                 statement.setString(1, order.getDescriptionOrder());
                 statement.setDate(2, order.getBeginDateOrder());
-                statement.setBoolean(3, order.isFinishedOrder());
-                statement.setInt(4, order.getMantainerId());
-                statement.setInt(5, order.getMachineId());
+                statement.setDate(3, order.getFinalDateOrder());
+                statement.setBoolean(4, order.isFinishedOrder());
+                statement.setInt(5, order.getMantainerId());
+                statement.setInt(6, order.getMachineId());
             } else if (operacao == ALTERACAO) {
-                sql = "update `manutencao`.order set descriptionOrder = ?, beginDateOrder = ?, finishedOrder = ?, mantainerId = ?, machineId = ? where idOrder = ?";
+                sql = "update `manutencao`.order set descriptionOrder = ?, beginDateOrder = ?, finalDateOrder = ?, finishedOrder = ?, mantainerId = ?, machineId = ? where idOrder = ?";
                 statement = connect.connection.prepareStatement(sql);
                 statement.setString(1, order.getDescriptionOrder());
                 statement.setDate(2, order.getBeginDateOrder());
-                statement.setBoolean(3, order.isFinishedOrder());
-                statement.setInt(4, order.getMantainerId());
-                statement.setInt(5, order.getMachineId());
-                statement.setInt(6, order.getIdOrder());
+                statement.setDate(3, order.getFinalDateOrder());
+                statement.setBoolean(4, order.isFinishedOrder());
+                statement.setInt(5, order.getMantainerId());
+                statement.setInt(6, order.getMachineId());
+                statement.setInt(7, order.getIdOrder());
             } else if (operacao == EXCLUSAO) {
                 sql = "delete from `manutencao`.order where idOrder = ?";
                 statement = connect.connection.prepareStatement(sql);
@@ -94,6 +131,35 @@ public class OrderDAO extends ManutencaoDAO {
             men = "Falha na operacao!";
         }
         return men;
+    }
+
+    public ArrayList<Order> localizarAtrasadas() {
+        Date date = new Date();
+        System.out.println(date);
+        java.sql.Date dateSQL = new java.sql.Date(date.getTime());
+        
+        sql = "select * from `manutencao`.order where finalDateOrder < ?";
+        try {
+            statement = connect.connection.prepareStatement(sql);
+            statement.setDate(1, dateSQL);
+            resultSet = statement.executeQuery();
+            ArrayList<Order> orders = new ArrayList<>();
+            while (resultSet.next()) {
+                Order newOrder = new Order(
+                        resultSet.getInt(1), 
+                        resultSet.getString(2), 
+                        resultSet.getDate(3), 
+                        resultSet.getDate(4), 
+                        resultSet.getBoolean(5), 
+                        resultSet.getInt(6), 
+                        resultSet.getInt(7));
+                orders.add(newOrder);
+            }
+            return orders;
+        } catch (SQLException erro) {
+            System.out.println(erro);
+            return null;
+        }
     }
     
 }

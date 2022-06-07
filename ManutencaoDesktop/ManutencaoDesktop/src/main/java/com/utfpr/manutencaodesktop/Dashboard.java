@@ -29,9 +29,13 @@ public class Dashboard extends javax.swing.JFrame {
     public Dashboard() {
         isFinishedFilter = false;
         initComponents();
-        this.filterButton.setSelected(this.openFilterButton.getModel(), true);
+        this.filterButton.setSelected(this.allFilterButton.getModel(), true);
         getOrders();
         createList();
+    }
+    
+    public void update() {
+        getOrders();
     }
 
     /**
@@ -47,11 +51,13 @@ public class Dashboard extends javax.swing.JFrame {
         newOrderQuickButton = new javax.swing.JButton();
         orderList = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        allFilterButton = new javax.swing.JRadioButton();
         openFilterButton = new javax.swing.JRadioButton();
         closedFilterButton = new javax.swing.JRadioButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jRadioButton1 = new javax.swing.JRadioButton();
         menuBar = new javax.swing.JMenuBar();
         mantainersButton = new javax.swing.JMenu();
         newMantainerButton = new javax.swing.JMenuItem();
@@ -71,6 +77,15 @@ public class Dashboard extends javax.swing.JFrame {
         });
 
         orderList.setViewportView(jList1);
+
+        filterButton.add(allFilterButton);
+        allFilterButton.setText("Todas");
+        allFilterButton.setActionCommand("");
+        allFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                allFilterButtonActionPerformed(evt);
+            }
+        });
 
         filterButton.add(openFilterButton);
         openFilterButton.setText("Abertas");
@@ -105,6 +120,15 @@ public class Dashboard extends javax.swing.JFrame {
         });
 
         jLabel1.setText("Filtrar:");
+
+        filterButton.add(jRadioButton1);
+        jRadioButton1.setText("Atrasadas");
+        jRadioButton1.setToolTipText("");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         mantainersButton.setText("Manutentores");
 
@@ -153,9 +177,9 @@ public class Dashboard extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(newOrderQuickButton, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -163,10 +187,19 @@ public class Dashboard extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(openFilterButton)
-                            .addComponent(closedFilterButton)
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(allFilterButton)
+                                    .addComponent(openFilterButton))
+                                .addGap(0, 18, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jRadioButton1)
+                                    .addComponent(closedFilterButton))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(orderList, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
@@ -184,10 +217,14 @@ public class Dashboard extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addComponent(jLabel1)
-                        .addGap(16, 16, 16)
-                        .addComponent(openFilterButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(closedFilterButton)))
+                        .addComponent(allFilterButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(openFilterButton)
+                        .addGap(5, 5, 5)
+                        .addComponent(closedFilterButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -198,6 +235,7 @@ public class Dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
         OrderForm telaOrderForm = new OrderForm();
         telaOrderForm.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_newOrderQuickButtonActionPerformed
 
     private void openMantainerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMantainerButtonActionPerformed
@@ -227,14 +265,14 @@ public class Dashboard extends javax.swing.JFrame {
     private void openFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFilterButtonActionPerformed
         // TODO add your handling code here:
         this.isFinishedFilter = false;
-        getOrders();
+        getOrdersFiltered();
         createList();
     }//GEN-LAST:event_openFilterButtonActionPerformed
 
     private void closedFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closedFilterButtonActionPerformed
         // TODO add your handling code here:
         this.isFinishedFilter = true;
-        getOrders();
+        getOrdersFiltered();
         createList();
     }//GEN-LAST:event_closedFilterButtonActionPerformed
 
@@ -242,6 +280,7 @@ public class Dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
         OrderForm telaOrderForm = new OrderForm(this.jList1.getSelectedValue());
         telaOrderForm.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void newMantainerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMantainerButtonActionPerformed
@@ -249,6 +288,16 @@ public class Dashboard extends javax.swing.JFrame {
         MantainerForm telaMantainer = new MantainerForm();
         telaMantainer.setVisible(true);
     }//GEN-LAST:event_newMantainerButtonActionPerformed
+
+    private void allFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allFilterButtonActionPerformed
+        getOrders();
+        createList();
+    }//GEN-LAST:event_allFilterButtonActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        getOrdersByDate();
+        createList();
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,12 +334,22 @@ public class Dashboard extends javax.swing.JFrame {
         });
     }
     
-    private void getOrders() {
+    private void getOrdersFiltered() {
         OrderDAO orderDAO = new OrderDAO();
-        orders = orderDAO.localizarTodos(this.isFinishedFilter);
+        orders = orderDAO.localizarFiltro(this.isFinishedFilter);
+    }
+    
+    public void getOrders() {
+        OrderDAO orderDAO = new OrderDAO();
+        orders = orderDAO.localizarTodas();
+    }
+    
+    public void getOrdersByDate() {
+        OrderDAO orderDAO = new OrderDAO();
+        orders = orderDAO.localizarAtrasadas();
     }
 
-    private void createList() {
+    public void createList() {
         DefaultListModel listModel = new DefaultListModel();
         this.orders.forEach(order -> {
             listModel.addElement(order);
@@ -299,6 +358,7 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton allFilterButton;
     private javax.swing.JRadioButton closedFilterButton;
     private javax.swing.ButtonGroup filterButton;
     private javax.swing.JButton jButton1;
@@ -308,6 +368,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JMenu mantainersButton;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMantainerButton;

@@ -16,14 +16,23 @@ public class Order {
     private int idOrder;
     private String descriptionOrder;
     private Date beginDateOrder;
+    private Date finalDateOrder;
     private boolean finishedOrder;
     private int mantainerId;
     private int machineId;
 
-    public Order(int idOrder, String descriptionOrder, Date beginDateOrder, boolean finishedOrder, int mantainerId, int machineId) {
+    public Order(
+            int idOrder, 
+            String descriptionOrder, 
+            Date beginDateOrder, 
+            Date finalDateOrder, 
+            boolean finishedOrder, 
+            int mantainerId, 
+            int machineId) {
         this.idOrder = idOrder;
         this.descriptionOrder = descriptionOrder;
         this.beginDateOrder = beginDateOrder;
+        this.finalDateOrder = finalDateOrder;
         this.finishedOrder = finishedOrder;
         this.mantainerId = mantainerId;
         this.machineId = machineId;
@@ -56,6 +65,14 @@ public class Order {
     public void setBeginDateOrder(Date beginDateOrder) {
         this.beginDateOrder = beginDateOrder;
     }
+    
+    public Date getFinalDateOrder() {
+        return finalDateOrder;
+    }
+
+    public void setFinalDateOrder(Date finalDateOrder) {
+        this.finalDateOrder = finalDateOrder;
+    }
 
     public boolean isFinishedOrder() {
         return finishedOrder;
@@ -87,7 +104,6 @@ public class Order {
     public String toString() {
         return descriptionOrder;
     }
-    
     
     
 }

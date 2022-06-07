@@ -5,6 +5,7 @@
  */
 package com.utfpr.manutencaodesktop.orders;
 
+import com.utfpr.manutencaodesktop.Dashboard;
 import com.utfpr.manutencaodesktop.machines.Machine;
 import com.utfpr.manutencaodesktop.machines.MachinesDAO;
 import com.utfpr.manutencaodesktop.mantainer.Mantainer;
@@ -24,7 +25,13 @@ public class OrderForm extends javax.swing.JFrame {
     public ArrayList<Machine> machines;
     public ArrayList<Mantainer> mantainers;
     public Order order;
+    public boolean concluido;
     OrderDAO orderDAO;
+    
+    public void openDashboard() {
+        Dashboard principal = new Dashboard();
+        principal.setVisible(true);
+    }
 
     /**
      * Creates new form orderForm
@@ -33,6 +40,7 @@ public class OrderForm extends javax.swing.JFrame {
         initComponents();
         orderDAO = new OrderDAO();
         order = new Order();
+        concluido = false;
         createLists();
     }
 
@@ -55,9 +63,11 @@ public class OrderForm extends javax.swing.JFrame {
         }
         this.machineSelect.setSelectedItem(selectedMachine);
         this.mantainerSelect.setSelectedItem(selectedMantainer);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String date = dtf.format(editOrder.getBeginDateOrder().toLocalDate());
+        String dateTermino = dtf.format(editOrder.getFinalDateOrder().toLocalDate());
         this.dateField.setText(date);
+        this.dateFieldTermino.setText(dateTermino);
         this.descField.setText(editOrder.getDescriptionOrder());
         this.isFinished.setSelected(editOrder.isFinishedOrder());
     }
@@ -83,9 +93,16 @@ public class OrderForm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         dateField = new javax.swing.JFormattedTextField();
+        jLabelTermino = new javax.swing.JLabel();
+        dateFieldTermino = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ordem");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Máquina");
 
@@ -125,6 +142,24 @@ public class OrderForm extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dateField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateFieldActionPerformed(evt);
+            }
+        });
+
+        jLabelTermino.setText("Término");
+
+        try {
+            dateFieldTermino.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        dateFieldTermino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateFieldTerminoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -133,7 +168,7 @@ public class OrderForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addGap(18, 18, 18)
@@ -141,45 +176,63 @@ public class OrderForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(isFinished, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
                             .addComponent(machineSelect, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mantainerSelect, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(mantainerSelect, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelTermino, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dateFieldTermino, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(isFinished, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(machineSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(mantainerSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isFinished))
-                .addGap(25, 25, 25)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(machineSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(mantainerSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(isFinished)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(dateFieldTermino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabelTermino))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(309, 309, 309)
+                        .addComponent(jLabel4)
+                        .addGap(65, 65, 65)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton1))
-                .addGap(25, 25, 25))
+                .addContainerGap())
         );
 
         pack();
@@ -190,7 +243,7 @@ public class OrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_isFinishedActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        openDashboard();
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -199,8 +252,10 @@ public class OrderForm extends javax.swing.JFrame {
         Machine machine = (Machine) this.machineSelect.getSelectedItem();
         Mantainer mantainer = (Mantainer) this.mantainerSelect.getSelectedItem();
         Date beginDate = null;
+        Date finalDate = null;
         try {
             beginDate = new Date(Date.parse(this.dateField.getText()));
+            finalDate = new Date(Date.parse(this.dateFieldTermino.getText()));
         } catch (IllegalArgumentException erro) {
             JOptionPane.showMessageDialog(null, "Preencha a data e tente novamente!");
         }
@@ -208,22 +263,37 @@ public class OrderForm extends javax.swing.JFrame {
         if (machine != null 
                 && mantainer != null 
                 && !"".equals(dateField.getText())
-                && beginDate != null){
+                && beginDate != null
+                && finalDate != null){
             if (this.order.getIdOrder() == 0) {
-                Order newOrder = new Order(0, this.descField.getText(), beginDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
+                Order newOrder = new Order(0, this.descField.getText(), beginDate, finalDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
                 orderDAO.order = newOrder;
                 JOptionPane.showMessageDialog(null, orderDAO.atualizar(orderDAO.INCLUSAO));
+                openDashboard();
                 this.dispose();
             } else {
-                Order newOrder = new Order(order.getIdOrder(), this.descField.getText(), beginDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
+                Order newOrder = new Order(order.getIdOrder(), this.descField.getText(), beginDate, finalDate, this.isFinished.isSelected(), mantainer.getIdMantainer(), machine.getIdMachine());
                 orderDAO.order = newOrder;
                 JOptionPane.showMessageDialog(null, orderDAO.atualizar(orderDAO.ALTERACAO));
+                openDashboard();
                 this.dispose();
             }
         } else {
             JOptionPane.showMessageDialog(null, "Preencha todos os campos e tente novamente!");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void dateFieldTerminoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateFieldTerminoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dateFieldTerminoActionPerformed
+
+    private void dateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dateFieldActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        openDashboard();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -278,6 +348,7 @@ public class OrderForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField dateField;
+    private javax.swing.JFormattedTextField dateFieldTermino;
     private javax.swing.JTextArea descField;
     private javax.swing.JCheckBox isFinished;
     private javax.swing.JButton jButton1;
@@ -286,6 +357,7 @@ public class OrderForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabelTermino;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<Machine> machineSelect;
     private javax.swing.JComboBox<Mantainer> mantainerSelect;
