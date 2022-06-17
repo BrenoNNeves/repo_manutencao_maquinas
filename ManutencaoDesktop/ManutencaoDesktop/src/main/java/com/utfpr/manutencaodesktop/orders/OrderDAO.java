@@ -138,7 +138,7 @@ public class OrderDAO extends ManutencaoDAO {
         System.out.println(date);
         java.sql.Date dateSQL = new java.sql.Date(date.getTime());
         
-        sql = "select * from `manutencao`.order where finalDateOrder < ?";
+        sql = "select * from `manutencao`.order where finalDateOrder < ? and finishedOrder = 0";
         try {
             statement = connect.connection.prepareStatement(sql);
             statement.setDate(1, dateSQL);
