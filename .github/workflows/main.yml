@@ -8,7 +8,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: thundra-io/thundra-maven-test-action@v1.0.4
       - name: Set up JDK 14
         uses: actions/setup-java@v3
 
@@ -21,4 +20,4 @@ jobs:
         runs-on: ubuntu-latest
         
         steps:
-        - uses: Maes95/maven-action@1.0.0
+        - uses: thundra-io/thundra-maven-test-action@v1.0.4
