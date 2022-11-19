@@ -17,3 +17,8 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
+  test:
+        runs-on: ubuntu-latest
+        
+        steps:
+        - uses: Maes95/maven-action@1.0.0
