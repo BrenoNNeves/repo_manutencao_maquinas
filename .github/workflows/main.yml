@@ -22,4 +22,6 @@ jobs:
         steps:
             - name: Thundra Maven Test 
               uses: thundra-io/thundra-maven-test-action@v1
+            - name: Run mvn command
+              run: mvn clean verify  
 
