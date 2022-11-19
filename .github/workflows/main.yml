@@ -20,9 +20,6 @@ jobs:
         runs-on: ubuntu-latest
         
         steps:
-            - name: Run tests
-              run: ./run-tests.sh
-            - name: Upload test results to Datadog
-              if: always()
-              run: datadog-ci junit upload --service service_name ./junit.xml
+            - name: Thundra Maven Test 
+              uses: thundra-io/thundra-maven-test-action@v1
 
