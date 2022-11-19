@@ -1,0 +1,19 @@
+name: Trab
+on:
+  woerflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: RUn a one-line script
+        run: echo Hello, Word!
+        
+
+
+test:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: RUn a one-line script
+        run: echo Hello, Word!
